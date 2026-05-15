@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ernie — Today</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  body { font-family: "Inter", -apple-system, system-ui, sans-serif; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="today.jsx"></script>
+
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+
+function Phone({ children, dark = true }) {
+  return <IOSDevice width={402} height={874} dark={dark}>{children}</IOSDevice>;
+}
+
+function Notes({ children, title }) {
+  return (
+    <div style={{
+      width: 320, padding: '20px 22px', background: '#FBF7EE',
+      borderRadius: 10, border: '1px solid rgba(60,40,20,.08)',
+      fontFamily: '"Inter", system-ui', fontSize: 13, lineHeight: 1.55,
+      color: '#3a2f23', alignSelf: 'stretch',
+    }}>
+      <div style={{
+        fontFamily: '"IBM Plex Mono", monospace', fontSize: 10.5,
+        letterSpacing: 1.2, textTransform: 'uppercase',
+        color: 'rgba(60,40,20,.55)', marginBottom: 10,
+      }}>{title}</div>
+      <div className="ernie-notes">{children}</div>
+    </div>
+  );
+}
+
+const App = () => (
+  <>
+    <style>{`
+      .ernie-notes p { margin: 0 0 10px; }
+      .ernie-notes p:last-child { margin: 0; }
+      .ernie-notes h4 {
+        margin: 14px 0 6px; font-size: 12px; font-weight: 600;
+        letter-spacing: .3px; color: #2a2218;
+        text-transform: uppercase;
+      }
+      .ernie-notes code, .ernie-notes .mono {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        background: rgba(168,122,61,.10);
+        padding: 1px 5px; border-radius: 3px;
+        color: #6b4e1f;
+      }
+      .ernie-notes ul { padding-left: 16px; margin: 0 0 10px; }
+      .ernie-notes li { margin-bottom: 4px; }
+      .ernie-notes .kbd {
+        font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+        padding: 1px 6px; border: 1px solid rgba(60,40,20,.18);
+        border-radius: 3px; color: #3a2f23;
+        background: rgba(255,255,255,.5);
+      }
+    `}</style>
+
+    <DesignCanvas minScale={0.15} maxScale={3}>
+
+      {/* ── INTRO ─────────────────────────────────────────────── */}
+      <DCSection id="intro" title="Ernie · Today" subtitle="The landing tab. What you see every time you open the app.">
+        <DCArtboard id="brief" label="Brief & system" width={760} height={420}>
+          <div style={{
+            width: '100%', height: '100%', background: '#1A1410', color: '#F0E8DD',
+            padding: '36px 40px', boxSizing: 'border-box',
+            fontFamily: '"Inter", system-ui', display: 'flex', flexDirection: 'column', gap: 18,
+          }}>
+            <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 11, letterSpacing: 1.4, textTransform: 'uppercase', color: 'rgba(240,232,221,.4)' }}>
+              app/(tabs)/today.tsx · landing tab
+            </div>
+            <div style={{ fontFamily: '"Fraunces", serif', fontSize: 32, fontWeight: 400, lineHeight: 1.1, letterSpacing: -0.8 }}>
+              The first 3 seconds.
+            </div>
+            <div style={{ fontSize: 14, lineHeight: 1.6, color: 'rgba(240,232,221,.7)', maxWidth: 540 }}>
+              When the user opens Ernie at 11:47pm on a commute, they want to know one thing: <em>can I be done in 20 minutes?</em>
+              All three variants answer that. They differ in how much else they show alongside.
+            </div>
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+              marginTop: 'auto', paddingTop: 16,
+              borderTop: '1px solid rgba(240,232,221,.08)',
+            }}>
+              {[
+                ['v1 · One Thing', 'Hero number, one CTA. Things 3 calm. The default surface.'],
+                ['v2 · Daybook', 'Per-deck list. Bear/Obsidian feel. For users with many decks.'],
+                ['v3 · Forecast', '7-day workload strip. See the burden coming. Scholar mode.'],
+              ].map(([t, d]) => (
+                <div key={t}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#D4A574', marginBottom: 6 }}>{t}</div>
+                  <div style={{ fontSize: 13, color: 'rgba(240,232,221,.62)', lineHeight: 1.5 }}>{d}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── V1 ─────────────────────────────────────────────── */}
+      <DCSection id="v1" title="V1 · One Thing" subtitle="Single hero number. Single CTA. The answer to “what do I do now?” is one button.">
+        <DCArtboard id="v1-main" label="Hero queue · dark" width={402} height={874}>
+          <Phone dark><TodayV1 /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v1-light" label="Light mode" width={402} height={874}>
+          <Phone dark={false}><TodayV1 light /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v1-notes" label="Breakdown" width={420} height={874}>
+          <Notes title="V1 · One Thing">
+            <p><strong>Why this exists.</strong> The default. When in doubt, this is what ships. Nothing competes with "start review." Everything else is in service of that one decision.</p>
+
+            <h4>Layout · top → bottom</h4>
+            <ul>
+              <li>Status bar (54px safe area)</li>
+              <li>Greeting + date (left) · streak chip (right)</li>
+              <li><strong>Hero queue</strong>: mono caption · <code>120px</code> Fraunces "47" · queue-breakdown dot row</li>
+              <li>Daily-goal hairline bar + ETA caption</li>
+              <li><strong>Continue</strong> (small, ghost) — if a session was interrupted</li>
+              <li><strong>Start review</strong> — full-width amber CTA</li>
+              <li>Tab bar (5 tabs, Today active)</li>
+            </ul>
+
+            <h4>RN / NativeWind</h4>
+            <ul>
+              <li><span className="mono">{`<HeroQueue total={47} new={4} learn={6} review={37}/>`}</span></li>
+              <li><span className="mono">{`<GoalBar done={12} target={50}/>`}</span> · 3px amber hairline</li>
+              <li><span className="mono">{`<ContinueChip lastDeck="…" remaining={11}/>`}</span> · ghost-styled, mono</li>
+              <li><span className="mono">{`<PrimaryCTA tone="amber"/>`}</span> · 56px, weight 600</li>
+              <li><span className="mono">{`<TabBar active="today"/>`}</span> · shared component</li>
+              <li><strong>Tailwind classes</strong>: <code>bg-bg-warm</code>, <code>text-ink</code>, <code>font-serif</code>, <code>text-amber-500</code>. Define in <code>tailwind.config.js</code>.</li>
+            </ul>
+
+            <h4>Interactions</h4>
+            <ul>
+              <li>Tap CTA → push <code>/review</code> with mixed queue</li>
+              <li>Tap Continue chip → resume last session at exact card</li>
+              <li>Tap streak chip → opens stats tab scrolled to streak detail</li>
+              <li>Tap "47" → bottom sheet: "Customize today's queue" (cap, deck filter, new vs review balance)</li>
+              <li>Pull-down on screen → refresh queue from FSRS scheduler</li>
+            </ul>
+
+            <h4>Empty · loading · error</h4>
+            <ul>
+              <li><strong>Caught up</strong> (no due cards) · separate artboard. Calm "Nothing due" + soft amber glow</li>
+              <li><strong>Streak danger</strong> (after 9pm, still due) · streak chip glows terracotta; "Just 5 to save the streak" alt CTA appears below primary</li>
+              <li><strong>First run</strong> · three big choices: Create / Import / Starter</li>
+              <li><strong>Loading</strong>: hero "47" renders <code>—</code> in mono if queue not yet computed (sub-100ms; effectively never seen)</li>
+            </ul>
+
+            <h4>Light vs dark</h4>
+            <p>Light bg <code>#F5EFE6</code> with <strong>2% paper-grain SVG noise</strong> as a fixed bg-image. Hero number stays at full ink weight; chip borders warm <code>~30%</code> browner than dark. Amber accent shifts to <code>#A87A3D</code> for AA contrast.</p>
+
+            <h4>iOS · Android</h4>
+            <ul>
+              <li><strong>iOS:</strong> tab bar uses <code>UITabBarController</code> system blur if you prefer; here we draw it flat with a hairline top border to match the rest of the app's flatness.</li>
+              <li><strong>Android:</strong> pull-to-refresh uses platform indicator (small spinner top center). Edge-to-edge: hero number reflows up <code>16px</code> on devices without notch.</li>
+              <li>Both: Dynamic Type / system font scale respected — hero number caps at <code>140px</code> to avoid overflow.</li>
+            </ul>
+          </Notes>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── V2 ─────────────────────────────────────────────── */}
+      <DCSection id="v2" title="V2 · Daybook" subtitle="Date-led journal feel. Decks as a list — each row is a one-tap mini-session.">
+        <DCArtboard id="v2-main" label="Deck list" width={402} height={874}>
+          <Phone dark><TodayV2 /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v2-notes" label="Breakdown" width={420} height={874}>
+          <Notes title="V2 · Daybook">
+            <p><strong>Why this exists.</strong> Users with 5+ decks don't want a mixed queue — they want to study Cardio first because the exam is Thursday. This screen treats today like a journal entry: date at top, decks as the body, action at the bottom.</p>
+
+            <h4>Layout · top → bottom</h4>
+            <ul>
+              <li>Mono "good evening" caption</li>
+              <li><strong>Date</strong> stacked in serif · "Tuesday," / "May 12" (one weight, two ink tones)</li>
+              <li>Goal ring (56px, amber stroke) top-right of date</li>
+              <li>Summary line: "47 cards across 4 decks · about 28 minutes"</li>
+              <li><strong>Deck rows</strong>: queue-marker bar · name + tag · mono breakdown <code>2n · 3l · 18r · last 6h ago</code> · big mono due count · chevron</li>
+              <li><strong>Continue review</strong> sticky strip (amber, full-width) — only if there's an active session</li>
+              <li>Tab bar</li>
+            </ul>
+
+            <h4>Queue-marker bar (left of each row)</h4>
+            <p>4px wide, 36px tall, stacked color segments showing the new/learn/review proportion in that deck. <strong>Reads instantly</strong>: "Cardio is mostly review, Spanish has new cards waiting." No legend needed — the colors match the dot row everywhere else.</p>
+
+            <h4>RN / NativeWind</h4>
+            <ul>
+              <li><span className="mono">{`<DeckRow deck={deck} onTap={start} onLongPress={openSheet}/>`}</span></li>
+              <li><span className="mono">{`<QueueMarker new={n} learn={l} review={r}/>`}</span> · SVG, 4×36</li>
+              <li><span className="mono">{`<GoalRing done target size={56} sw={4}/>`}</span> · also shared</li>
+              <li>List uses <code>FlatList</code> if &gt;20 decks; otherwise plain map. <code>contentInsetAdjustmentBehavior="automatic"</code> on iOS.</li>
+            </ul>
+
+            <h4>Interactions</h4>
+            <ul>
+              <li>Tap row → review session for that deck only</li>
+              <li><strong>Long-press row</strong> → bottom sheet: Pause deck · Cap new cards today · Reset progress · Edit settings</li>
+              <li><strong>Swipe left on row</strong> → "Skip today" (treats as if reviewed Good, doesn't change schedule) and "Pause"</li>
+              <li>Tap date header → date picker for retroactive sessions (rare; in Settings → Advanced)</li>
+              <li>Tap goal ring → "Adjust daily goal" sheet (slider 10–200)</li>
+            </ul>
+
+            <h4>Empty · loading · error</h4>
+            <ul>
+              <li><strong>No due cards in any deck:</strong> deck list shows decks with <code>0 due</code> in ink3; summary becomes "Nothing due today" and the Continue strip is replaced by an "Add cards" ghost button</li>
+              <li><strong>One deck has &gt;100 due:</strong> a tiny mono caption appears under that row: "behind by 2 days — load smoothing on"</li>
+              <li><strong>Sync conflict on a deck:</strong> orange dot replaces the queue marker; tap to resolve</li>
+            </ul>
+
+            <h4>iOS · Android</h4>
+            <ul>
+              <li><strong>iOS:</strong> swipe actions use native <code>UISwipeActionsConfiguration</code> via <code>react-native-gesture-handler</code>. Long-press triggers a haptic <code>impactMedium</code> and shows the sheet (no menu floats — keep the surface flat).</li>
+              <li><strong>Android:</strong> swipe actions render inline; long-press fires haptic <code>HapticFeedbackConstants.LONG_PRESS</code>. Material ripple disabled — row background fills to <code>hairStrong</code> for 200ms instead.</li>
+            </ul>
+          </Notes>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── V3 ─────────────────────────────────────────────── */}
+      <DCSection id="v3" title="V3 · Forecast" subtitle="7-day workload at a glance. See the burden coming. Scholar mode.">
+        <DCArtboard id="v3-main" label="Workload strip + today detail" width={402} height={874}>
+          <Phone dark><TodayV3 /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v3-notes" label="Breakdown" width={420} height={874}>
+          <Notes title="V3 · Forecast">
+            <p><strong>Why this exists.</strong> Serious learners plan their week. If Wednesday's load is 99 cards because Monday slipped, they want to know that on Tuesday — not at 11pm Wednesday. FSRS knows tomorrow's load; surface it.</p>
+
+            <h4>Layout · top → bottom</h4>
+            <ul>
+              <li>Top bar: date + mono "workload · 7 days" caption (left) · streak chip (right)</li>
+              <li><strong>7-day workload strip</strong> — 7 bars, height = card count. Today is amber + bolder. Past days show <em>completed</em> in sage, <em>missed</em> as hair-color void above the sage fill.</li>
+              <li><strong>Today detail card</strong>: cards-remaining headline · 3-segment new/learn/review grid · <strong>retention forecast block</strong> (mono): "92% if finished · 78% if skipped · Wed load grows to 99"</li>
+              <li>Start CTA</li>
+              <li>Tab bar</li>
+            </ul>
+
+            <h4>The forecast block is the differentiator</h4>
+            <p>One sentence in serif, with the numbers in mono amber/again. This is FSRS earning its rent: <em>tell me what skipping costs</em>. No charts on this card — the bars at the top already give the visual; this is the narrative version of the same data.</p>
+
+            <h4>Bar treatment</h4>
+            <ul>
+              <li>Past day, fully complete: solid sage fill</li>
+              <li>Past day, missed: amber-dimmed void at top, sage fill at bottom</li>
+              <li>Today: amber outline with dark progress fill from bottom (inverse of past — what's <em>done</em> is dark, what's <em>left</em> is amber)</li>
+              <li>Future: hairline outline only, no fill — "potential"</li>
+            </ul>
+
+            <h4>RN / NativeWind</h4>
+            <ul>
+              <li><span className="mono">{`<WorkloadStrip days={forecast}/>`}</span> · 7 absolute children, no SVG (better RN perf)</li>
+              <li><span className="mono">{`<TodayDetail .../>`}</span> · same primitives as V1 hero, in card form</li>
+              <li><span className="mono">{`<ForecastBlock retention={r} skipPenalty={p}/>`}</span> · pure text, mono accents</li>
+            </ul>
+
+            <h4>Interactions</h4>
+            <ul>
+              <li>Tap any future-day bar → "Why this is X" sheet showing the cards scheduled for that day, grouped by stability bucket. Power feature, hidden until tapped.</li>
+              <li>Tap past-day bar → that day's session stats (cards rated, retention)</li>
+              <li>Long-press strip → toggle 7d / 14d / 30d horizons</li>
+              <li>Pull-down → recompute forecast (e.g. after rating outside the queue)</li>
+            </ul>
+
+            <h4>Empty / first run</h4>
+            <p>Strip needs 3+ days of history before forecasts are meaningful. Until then, V3 quietly falls back to V1's hero queue with a single mono note: <em>"forecast appears after 3 days of reviews."</em> Don't show a chart of guesses.</p>
+
+            <h4>Platform notes</h4>
+            <ul>
+              <li><strong>iOS:</strong> bar tap uses <code>UIImpactFeedbackGenerator</code> <code>light</code>. Sheet uses a half-height detent (<code>UISheetPresentationController.Detent.medium</code>).</li>
+              <li><strong>Android:</strong> bar tap is a regular touchable with 8% bg-darken ripple suppression (consistency with the rest of the app's flatness). Bottom sheet uses a regular modal at <code>50%</code> height.</li>
+            </ul>
+          </Notes>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── STATES ─────────────────────────────────────────────── */}
+      <DCSection id="states" title="States" subtitle="Empty, behind-schedule, first-run — designed, not afterthoughts.">
+        <DCArtboard id="s-caught" label="Caught up" width={402} height={874}>
+          <Phone dark><TodayCaughtUp /></Phone>
+        </DCArtboard>
+        <DCArtboard id="s-danger" label="Streak in danger (post 9pm)" width={402} height={874}>
+          <Phone dark><TodayStreakDanger /></Phone>
+        </DCArtboard>
+        <DCArtboard id="s-first" label="First run" width={402} height={874}>
+          <Phone dark><TodayFirstRun /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="states-notes" label="State logic" width={420} height={874}>
+          <Notes title="State logic">
+            <h4>Caught up</h4>
+            <p>Triggered when <code>queue.length === 0 && deckCount &gt; 0</code>. The lamp-glow illustration is the only ornament in the app — a single 6×6 amber dot inside a radial gradient. <strong>Not</strong> a cartoon. Replaces hero number; primary CTA is replaced by two ghosts (Browse / Add).</p>
+
+            <h4>Streak in danger</h4>
+            <p>Triggered when <code>localHour &gt;= 21 && queue.length &gt; 0 && streak &gt; 7</code>. Subtler than a notification — just the streak chip changes border + text to terracotta and a secondary ghost CTA appears: "Just 5 to save the streak." The 5-card option creates a temporary mini-queue prioritizing the easiest due cards (lowest D, highest R) so the user can <em>actually</em> finish in 2 minutes.</p>
+            <p>If <code>streak === 0</code>, no danger UI — there's nothing to save. Treat fresh users gently.</p>
+
+            <h4>First run</h4>
+            <p>Triggered when <code>deckCount === 0</code>. Three large tappable cards (Create / Import / Starter). No onboarding carousel, no permission prompts, no "let's get to know you" — the user already paid for the app, get them studying. 14-day trial reminder lives below the fold as a calm caption, not a modal.</p>
+
+            <h4>Other states (not pictured)</h4>
+            <ul>
+              <li><strong>Trial expired:</strong> hero card replaced by a serif "Renew or import your data" with two buttons. Reviewing still works — never block the user from their own cards.</li>
+              <li><strong>Sync failed:</strong> tiny amber dot top-right of streak chip; tap → "Last backup 3 days ago. Retry?" sheet.</li>
+              <li><strong>Behind schedule (&gt;3 days):</strong> a single mono caption under the hero: "behind by 4 days — load smoothing applied." FSRS automatically caps daily new cards in this state; we communicate that.</li>
+            </ul>
+          </Notes>
+        </DCArtboard>
+      </DCSection>
+
+    </DesignCanvas>
+  </>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

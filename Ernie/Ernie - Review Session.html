@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Ernie — Review Session</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  body { font-family: "Inter", -apple-system, system-ui, sans-serif; }
+  /* the design canvas owns the viewport */
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="review.jsx"></script>
+
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+
+// Wrap an iOS frame around any review-screen component. The frame owns the
+// status bar and home indicator; review screens leave a 54px top spacer to
+// clear the status bar themselves.
+function Phone({ children, dark = true }) {
+  return (
+    <IOSDevice width={402} height={874} dark={dark}>
+      {children}
+    </IOSDevice>
+  );
+}
+
+// Small notes block under each section's frames (acts as a sticky-note row
+// but rendered inline so screenshots & PNG export include it).
+function Notes({ children, title }) {
+  return (
+    <div style={{
+      width: 320, padding: '20px 22px', background: '#FBF7EE',
+      borderRadius: 10, border: '1px solid rgba(60,40,20,.08)',
+      fontFamily: '"Inter", system-ui', fontSize: 13, lineHeight: 1.55,
+      color: '#3a2f23', alignSelf: 'stretch',
+    }}>
+      <div style={{
+        fontFamily: '"IBM Plex Mono", monospace', fontSize: 10.5,
+        letterSpacing: 1.2, textTransform: 'uppercase',
+        color: 'rgba(60,40,20,.55)', marginBottom: 10,
+      }}>{title}</div>
+      <div className="ernie-notes">{children}</div>
+    </div>
+  );
+}
+
+const App = () => (
+  <>
+    <style>{`
+      .ernie-notes p { margin: 0 0 10px; }
+      .ernie-notes p:last-child { margin: 0; }
+      .ernie-notes h4 {
+        margin: 14px 0 6px; font-size: 12px; font-weight: 600;
+        letter-spacing: .3px; color: #2a2218;
+        text-transform: uppercase;
+      }
+      .ernie-notes code, .ernie-notes .mono {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        background: rgba(168,122,61,.10);
+        padding: 1px 5px; border-radius: 3px;
+        color: #6b4e1f;
+      }
+      .ernie-notes ul { padding-left: 16px; margin: 0 0 10px; }
+      .ernie-notes li { margin-bottom: 4px; }
+      .ernie-notes .kbd {
+        font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+        padding: 1px 6px; border: 1px solid rgba(60,40,20,.18);
+        border-radius: 3px; color: #3a2f23;
+        background: rgba(255,255,255,.5);
+      }
+    `}</style>
+
+    <DesignCanvas minScale={0.15} maxScale={3}>
+
+      {/* ───────────────────────────────────────────── INTRO ───────────────────────────────────────────── */}
+      <DCSection id="intro" title="Ernie · Review Session" subtitle="Three directions, each interactive — tap a card to reveal, rate to advance.">
+        <DCArtboard id="brief" label="Brief & system" width={760} height={520}>
+          <div style={{
+            width: '100%', height: '100%', background: '#1A1410', color: '#F0E8DD',
+            padding: '40px 44px', boxSizing: 'border-box',
+            fontFamily: '"Inter", system-ui', display: 'flex', flexDirection: 'column', gap: 22,
+          }}>
+            <div style={{
+              fontFamily: '"IBM Plex Mono", monospace', fontSize: 11,
+              letterSpacing: 1.4, textTransform: 'uppercase',
+              color: 'rgba(240,232,221,.4)',
+            }}>app/review/[deckId].tsx · review session</div>
+
+            <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontFamily: '"Fraunces", serif', fontSize: 36, lineHeight: 1.1,
+                  fontWeight: 400, letterSpacing: -1, marginBottom: 14,
+                }}>The screen they live in.</div>
+                <div style={{ fontSize: 14, lineHeight: 1.6, color: 'rgba(240,232,221,.7)', maxWidth: 460 }}>
+                  Designed for sustained, one-handed, late-night commute use.
+                  Critical actions sit in the thumb zone. Card content uses serif
+                  (encyclopedic feel); chrome uses Inter; intervals & memory math
+                  use mono. Single brass accent — no rainbow.
+                </div>
+              </div>
+
+              <div style={{ width: 220 }}>
+                <div style={{
+                  fontFamily: '"IBM Plex Mono", monospace', fontSize: 10.5,
+                  letterSpacing: 1.4, textTransform: 'uppercase',
+                  color: 'rgba(240,232,221,.4)', marginBottom: 10,
+                }}>palette</div>
+                <Swatch hex="#1A1410" name="bg dark" />
+                <Swatch hex="#221A14" name="surface" />
+                <Swatch hex="#F5EFE6" name="bg light" light />
+                <Swatch hex="#D4A574" name="amber accent" />
+                <div style={{ height: 10 }} />
+                <Swatch hex="#B86349" name="again · terracotta" />
+                <Swatch hex="#9C8E7B" name="hard · warm gray" />
+                <Swatch hex="#94A47A" name="good · sage" />
+                <Swatch hex="#D4A574" name="easy · amber" />
+              </div>
+            </div>
+
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+              marginTop: 'auto', paddingTop: 16,
+              borderTop: '1px solid rgba(240,232,221,.08)',
+            }}>
+              {[
+                ['v1 · Index Card', 'Things 3 calm. Label-first buttons, intervals as caption.'],
+                ['v2 · Scholar', 'Memory science visible. R/S/D chips + forgetting curve.'],
+                ['v3 · Thumb Deck', 'Interval-first. Swipe to rate. Commute-grade.'],
+              ].map(([t, d]) => (
+                <div key={t}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#D4A574', marginBottom: 6 }}>{t}</div>
+                  <div style={{ fontSize: 13, color: 'rgba(240,232,221,.62)', lineHeight: 1.5 }}>{d}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ───────────────────────────────────────────── V1 ───────────────────────────────────────────── */}
+      <DCSection id="v1" title="V1 · Index Card" subtitle="The calm baseline. Tap the card or “Show answer” to flip. Rate to advance.">
+        <DCArtboard id="v1-front" label="Front (basic note)" width={402} height={874}>
+          <Phone dark><ReviewV1 /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v1-back" label="Back (revealed)" width={402} height={874}>
+          <Phone dark><ReviewV1WithRevealed /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v1-cloze" label="Cloze type" width={402} height={874}>
+          <Phone dark><ReviewV1Cloze /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v1-light" label="Light mode" width={402} height={874}>
+          <Phone dark={false}><ReviewV1Light /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v1-done" label="Session complete" width={402} height={874}>
+          <Phone dark><ReviewDone /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v1-notes" label="Breakdown" width={420} height={874}>
+          <Notes title="V1 · Index Card">
+            <p><strong>Why this exists.</strong> The default surface for everyone. Calm, label-first, low cognitive load. If we have one design that doesn't intimidate a casual user, this is it.</p>
+
+            <h4>Layout · top → bottom</h4>
+            <ul>
+              <li><code>54px</code> safe-area · status bar</li>
+              <li>Top bar · back chevron · deck name + <code>23/47</code> · overflow</li>
+              <li><code>2px</code> amber progress hairline</li>
+              <li><strong>Card</strong> (flex:1) · type chip · serif content · meta row (seen / audio / flag / edit)</li>
+              <li>Thumb zone · <code>Show answer</code> full-width OR 4 rating buttons (<code>68px</code> tall, equal-width)</li>
+            </ul>
+
+            <h4>RN / NativeWind</h4>
+            <ul>
+              <li><span className="mono">{`<ReviewScreen>`}</span> → <span className="mono">{`<TopBar>`}</span> · <span className="mono">{`<ProgressBar>`}</span> · <span className="mono">{`<CardSurface>`}</span> · <span className="mono">{`<ThumbZone>`}</span></li>
+              <li><span className="mono">{`<RatingButton tone="again|hard|good|easy">`}</span></li>
+              <li><span className="mono">{`<ClozeMask>`}</span> · renders <code>{`{{c1::…}}`}</code> with dashed accent underline</li>
+              <li>Card flip uses <code>react-native-reanimated</code> <code>withTiming(180, 260ms)</code> with perspective transform</li>
+            </ul>
+
+            <h4>Interactions</h4>
+            <ul>
+              <li>Tap card OR "Show answer" OR <span className="kbd">space</span> → reveal</li>
+              <li>Tap rating button OR <span className="kbd">1</span>–<span className="kbd">4</span> → rate + advance</li>
+              <li><strong>Long-press card</strong> → contextual sheet: bury · suspend · note ease · open note</li>
+              <li><strong>Swipe down</strong> on card → undo last rating</li>
+              <li>Volume buttons (commute mode) → rate Good / Again. Off by default.</li>
+            </ul>
+
+            <h4>Empty · loading · error</h4>
+            <ul>
+              <li><strong>Loading:</strong> card silhouette only, no spinner. Local DB; should be &lt;50ms.</li>
+              <li><strong>Empty (queue done):</strong> the "Session complete" frame. Big serif "Done for today." with retention forecast.</li>
+              <li><strong>Error (note corrupted):</strong> card surface shows mono warning text + "Skip card" button. Doesn't crash the queue.</li>
+            </ul>
+
+            <h4>Light vs dark</h4>
+            <p>Light adds a <strong>~2% paper-grain noise overlay</strong> and a faint top-corner amber radial — the lamp on the kitchen table. Surfaces become a hair brighter than the bg (parchment over cream), not flatly inverted. Hairlines warm 30% browner.</p>
+
+            <h4>iOS · Android</h4>
+            <ul>
+              <li>Both: gesture areas respect bottom safe-area inset</li>
+              <li><strong>iOS:</strong> haptic <code>selection</code> on flip, <code>impactLight</code> on rate Good/Easy, <code>impactMedium</code> on Again. Tap card uses <code>UIImpactFeedbackGenerator</code>.</li>
+              <li><strong>Android:</strong> rate buttons use ripple-less feedback (background darkens 8% for 180ms — matches "ink absorbing"). No Material elevation on the card.</li>
+              <li><strong>Android:</strong> top status bar tints to <code>#1A1410</code> via <code>StatusBar.setBackgroundColor</code></li>
+            </ul>
+          </Notes>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ───────────────────────────────────────────── V2 ───────────────────────────────────────────── */}
+      <DCSection id="v2" title="V2 · Scholar" subtitle="Algorithmic rigor visible. R / S / D / lapses up top; retention curve on reveal.">
+        <DCArtboard id="v2-front" label="Front · memory state visible" width={402} height={874}>
+          <Phone dark><ReviewV2 /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v2-back" label="Back · curve expanded" width={402} height={874}>
+          <Phone dark><ReviewV2WithRevealed /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v2-back-collapsed" label="Back · curve collapsed" width={402} height={874}>
+          <Phone dark><ReviewV2CurveCollapsed /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v2-notes" label="Breakdown" width={420} height={874}>
+          <Notes title="V2 · Scholar">
+            <p><strong>Why this exists.</strong> FSRS is the differentiator — surface it. For serious learners (board prep, med, language) seeing the math is reassurance, not noise. Bordering on Linear-style information density without losing calm.</p>
+
+            <h4>What's new vs V1</h4>
+            <ul>
+              <li><strong>Memory chips row</strong> above card: <code>R 92%</code> · <code>S 4.2d</code> · <code>D 6.1</code> · reps · lapses. Mono, tabular-numbers, no decoration. Two-line: label tiny on top, value below.</li>
+              <li>Tap any chip → bottom sheet explaining the metric ("retention probability if reviewed now"). Casual users never tap; power users always do.</li>
+              <li><strong>Forgetting curve</strong> renders only after reveal: <code>R(t) = exp(-t/S)</code> for 3× stability days, with the proposed next interval marked. The curve <em>is</em> the rating preview.</li>
+              <li>Rating buttons taller (<code>78px</code>) and interval-prominent. Each shows the post-rating stability delta below: <code>S→8.4d</code>.</li>
+              <li>Tags shown inline at bottom of card; tappable to filter the queue.</li>
+            </ul>
+
+            <h4>Interactions</h4>
+            <ul>
+              <li>All V1 interactions + <strong>two-finger tap on card</strong> → toggle FSRS detail panel (slides up over thumb zone, shows fsrs internals: D delta, retrievability projection, schedule trace)</li>
+              <li>Long-press a rating button → preview what the schedule would look like 3 reviews from now, without rating</li>
+            </ul>
+
+            <h4>RN / NativeWind</h4>
+            <ul>
+              <li><span className="mono">{`<MemoryChipsBar>`}</span> renders <span className="mono">{`<MemChip label="R" value={r} accent="good" hint="retention" />`}</span></li>
+              <li><span className="mono">{`<RetentionCurve stability={s} mark={nextInterval} />`}</span> · SVG path via <code>react-native-svg</code>, 60 samples</li>
+              <li><span className="mono">{`<RatingButton>`}</span> variant <code>verbose</code> exposes <code>delta</code> prop</li>
+            </ul>
+
+            <h4>The case against</h4>
+            <p>This screen is more to look at when you're tired. The math is visible whether you want it or not. <strong>Mitigation:</strong> ship as a Settings toggle (<code>Show memory state</code>) defaulting on; advanced users keep it, casual users get V1.</p>
+
+            <h4>Loading / error</h4>
+            <p>Memory chips show <code>—</code> placeholders, not skeletons. Cards with no review history (new) hide the chips bar entirely — there's nothing honest to show.</p>
+          </Notes>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ───────────────────────────────────────────── V3 ───────────────────────────────────────────── */}
+      <DCSection id="v3" title="V3 · Thumb Deck" subtitle="One-handed first. Drag the card up/down/left/right after reveal — or tap the 2×2 grid. Interval-first.">
+        <DCArtboard id="v3-front" label="Front · tap to reveal" width={402} height={874}>
+          <Phone dark><ReviewV3 /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v3-back" label="Back · swipe directions visible" width={402} height={874}>
+          <Phone dark><ReviewV3WithRevealed /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v3-swipe" label="Mid-swipe (Easy armed)" width={402} height={874}>
+          <Phone dark><ReviewV3WithDrag /></Phone>
+        </DCArtboard>
+
+        <DCArtboard id="v3-notes" label="Breakdown" width={420} height={874}>
+          <Notes title="V3 · Thumb Deck">
+            <p><strong>Why this exists.</strong> Commute use. Standing on the MRT, one hand on the handrail. The user shouldn't have to stretch a thumb to the top of a 6.7" device. Card shrinks; rating zone owns the bottom half.</p>
+
+            <h4>Two ways to rate</h4>
+            <ul>
+              <li><strong>Tap:</strong> 2×2 grid of large (<code>70px</code>) buttons in the thumb zone. Interval is the dominant element (<code>22px</code> mono); label is the caption.</li>
+              <li><strong>Swipe the card:</strong> ← Again · → Easy · ↑ Good · ↓ Hard. Direction hints sit just outside the card; the armed direction glows. Release past <code>80px</code> threshold to commit; release short → snap back.</li>
+            </ul>
+
+            <h4>Why these directions</h4>
+            <p>"Good" goes up because it's the dominant rating (~70% of presses) and the thumb travels up most naturally from a bottom rest position. "Again" goes left because it's the destructive direction; left = back/undo across every gesture system. "Easy" goes right (forward / done). "Hard" goes down — the awkward one, because it's used least.</p>
+
+            <h4>RN / NativeWind</h4>
+            <ul>
+              <li><span className="mono">{`<SwipeCard>`}</span> uses <code>react-native-gesture-handler</code> <code>{`<PanGestureHandler>`}</code> + reanimated <code>useSharedValue</code>. Card transform: <code>translateX</code>, <code>translateY</code>, and a small <code>rotateZ</code> proportional to x (max 4°).</li>
+              <li>Threshold logic in worklet so it runs at 60fps without bridge cost</li>
+              <li>On commit: card animates further off-screen in the armed direction (<code>240ms easeIn</code>), the next card slides up from <code>scale 0.96 → 1.0</code></li>
+            </ul>
+
+            <h4>Interactions</h4>
+            <ul>
+              <li>Tap card · reveal</li>
+              <li>Drag card · arm rating · release to commit / snap back</li>
+              <li>Tap rating button · same as swipe in that direction (no animation, instant)</li>
+              <li>Swipe down on <em>front</em> (unrevealed) → reveal without rating</li>
+              <li>Long-press card · context sheet (same as V1/V2)</li>
+            </ul>
+
+            <h4>Loading / error</h4>
+            <ul>
+              <li>If a swipe fires before the next card loads (offline write conflict): card stays committed, "syncing" mono caption flashes in the thumb zone for ~200ms.</li>
+              <li>Swipe-with-no-network: full local. Backup syncs later. User never sees a network error here.</li>
+            </ul>
+
+            <h4>Platform notes</h4>
+            <ul>
+              <li><strong>iOS:</strong> haptic on threshold-crossing (<code>selectionChanged</code>) and on commit (<code>impactLight</code> for Good/Easy, <code>impactMedium</code> for Again/Hard). Edge swipes don't conflict with iOS back-swipe — pan handler activation requires &gt;<code>12px</code> from screen edge.</li>
+              <li><strong>Android:</strong> back-gesture safe-area respected (left edge inset <code>16px</code> minimum). Haptic uses <code>HapticFeedbackConstants.CLOCK_TICK</code> at threshold, <code>VIRTUAL_KEY</code> at commit. No bouncy spring on snap-back — uses <code>easeOut</code> not spring().</li>
+            </ul>
+          </Notes>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ───────────────────────────────────────────── shared notes ───────────────────────────────────────────── */}
+      <DCSection id="shared" title="Shared concerns" subtitle="Things true across all three.">
+        <DCArtboard id="shared-flip" label="Card flip motion" width={420} height={560}>
+          <Notes title="Card flip · motion spec">
+            <h4>Y-axis rotation, not fade</h4>
+            <p>Real physical flip. <code>perspective: 1200px</code>, <code>rotateY 0 → 180°</code> over <code>280ms</code>, easing <code>cubic-bezier(.32, .72, 0, 1)</code> — eased-out, no overshoot. Front face hides past 90°; back face is mounted at <code>rotateY 180°</code> initially, becomes visible past 90°.</p>
+
+            <h4>Tap feedback (ink-absorbing)</h4>
+            <p>On press: card bg darkens by 4% (dark) / lightens to <code>bgLift</code> (light) over <code>120ms</code>. On release: returns over <code>220ms</code> with a slight delay — the "absorbing" feel. No scale change.</p>
+
+            <h4>Rating commit motion</h4>
+            <p>Button pressed → bg pulses to <code>color + 24%</code> opacity for <code>140ms</code>, then card slides out in that rating's "direction" (V3: physical swipe direction; V1/V2: card slides up <code>40px</code> with <code>180ms easeIn</code> and fades). Next card starts at <code>opacity 0, translateY +8px, scale 0.985</code> → settles in <code>260ms</code>.</p>
+
+            <h4>What we don't do</h4>
+            <ul>
+              <li>No celebration animations on streaks (no confetti, no bounce)</li>
+              <li>No haptic on every tap — only on flip, rate, and threshold cross</li>
+              <li>No spring physics except for V3 snap-back, and only <code>damping 18, stiffness 220</code> (subtle)</li>
+            </ul>
+          </Notes>
+        </DCArtboard>
+
+        <DCArtboard id="shared-states" label="States covered" width={420} height={560}>
+          <Notes title="States covered (all variants)">
+            <h4>Front states</h4>
+            <ul>
+              <li>Basic note · serif question</li>
+              <li>Cloze · masked with dashed amber underline</li>
+              <li>Image occlusion · placeholder rect with mono "image" label (not designed here — needs its own artboard)</li>
+              <li>Audio prompt · speaker icon row plays before card shows</li>
+            </ul>
+
+            <h4>Back states</h4>
+            <ul>
+              <li>Basic · full answer below hairline divider</li>
+              <li>Cloze · reveals the masked term in amber, rest of sentence unchanged</li>
+              <li>With extra/notes · expandable disclosure ("more →") in the meta row</li>
+            </ul>
+
+            <h4>Session-level</h4>
+            <ul>
+              <li>First card in session · no skeleton, instant from local DB</li>
+              <li>Last card · "Session complete" screen (see V1 set)</li>
+              <li>Mid-session interrupted · resume sheet on next launch: "Resume 14/47?" / "Restart"</li>
+              <li>Daily limit hit · "Today's reviews done. Tomorrow: ~52 cards." Calm, no "come back!" urgency.</li>
+            </ul>
+
+            <h4>Error states</h4>
+            <ul>
+              <li>Card with corrupted front/back → mono "couldn't load this card" with skip / edit / report</li>
+              <li>FSRS scheduling failed → fall back to SM-2 silently, log it. User sees nothing.</li>
+              <li>Backup conflict → resolved on next sync; mid-session never blocks.</li>
+            </ul>
+          </Notes>
+        </DCArtboard>
+      </DCSection>
+
+    </DesignCanvas>
+  </>
+);
+
+// ── helpers ──────────────────────────────────────────────────────────────
+function Swatch({ hex, name, light }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+      <div style={{ width: 22, height: 22, borderRadius: 4, background: hex, border: light ? '1px solid rgba(0,0,0,.15)' : '1px solid rgba(255,255,255,.06)' }} />
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', fontFamily: '"IBM Plex Mono", monospace', fontSize: 11 }}>
+        <span style={{ color: 'rgba(240,232,221,.85)' }}>{name}</span>
+        <span style={{ color: 'rgba(240,232,221,.4)' }}>{hex}</span>
+      </div>
+    </div>
+  );
+}
+
+// Wrappers that pre-seed state to show specific states without
+// requiring the user to click.
+function ReviewV1WithRevealed() {
+  // patch DOM after mount: simulate a click on the card
+  const r = React.useRef(null);
+  React.useEffect(() => {
+    const id = setTimeout(() => {
+      const card = r.current?.querySelector('[data-card]') || r.current?.querySelector('div[style*="cursor: pointer"]');
+      if (card) card.click();
+    }, 50);
+    return () => clearTimeout(id);
+  }, []);
+  return <div ref={r} style={{ width: '100%', height: '100%' }}><ReviewV1 /></div>;
+}
+function ReviewV1Cloze() {
+  return <ReviewClozeWrapper Comp={ReviewV1} />;
+}
+function ReviewV2WithRevealed() {
+  const r = React.useRef(null);
+  React.useEffect(() => {
+    const id = setTimeout(() => {
+      const card = r.current?.querySelector('div[style*="cursor: pointer"]');
+      if (card) card.click();
+    }, 50);
+    return () => clearTimeout(id);
+  }, []);
+  return <div ref={r} style={{ width: '100%', height: '100%' }}><ReviewV2 /></div>;
+}
+function ReviewV2CurveCollapsed() {
+  const r = React.useRef(null);
+  React.useEffect(() => {
+    let t1, t2;
+    t1 = setTimeout(() => {
+      const card = r.current?.querySelector('div[style*="cursor: pointer"]');
+      if (card) card.click();
+      // After reveal, find the "retention curve ▾" toggle button and click it
+      t2 = setTimeout(() => {
+        const btns = Array.from(r.current?.querySelectorAll('button') || []);
+        const curveBtn = btns.find((b) => b.textContent?.toLowerCase().includes('retention curve'));
+        if (curveBtn) curveBtn.click();
+      }, 60);
+    }, 50);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+  return <div ref={r} style={{ width: '100%', height: '100%' }}><ReviewV2 /></div>;
+}
+function ReviewV3WithRevealed() {
+  const r = React.useRef(null);
+  React.useEffect(() => {
+    const id = setTimeout(() => {
+      const card = r.current?.querySelector('div[style*="cursor: pointer"]');
+      if (card) card.click();
+    }, 50);
+    return () => clearTimeout(id);
+  }, []);
+  return <div ref={r} style={{ width: '100%', height: '100%' }}><ReviewV3 /></div>;
+}
+function ReviewV3WithDrag() {
+  // To show a mid-drag state we render a fork of V3 with seeded drag values
+  return <ReviewV3DragSeed />;
+}
+
+// Force the second card (cloze) to be the displayed one by clicking
+// reveal+good on the first card before showing.
+function ReviewClozeWrapper({ Comp }) {
+  const r = React.useRef(null);
+  React.useEffect(() => {
+    // tap card, then tap "good"
+    let t1, t2;
+    t1 = setTimeout(() => {
+      const card = r.current?.querySelector('div[style*="cursor: pointer"]');
+      if (card) card.click();
+      t2 = setTimeout(() => {
+        const goodBtn = Array.from(r.current?.querySelectorAll('button') || []).find((b) => b.textContent?.includes('Good'));
+        if (goodBtn) goodBtn.click();
+      }, 30);
+    }, 30);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+  return <div ref={r} style={{ width: '100%', height: '100%' }}><Comp /></div>;
+}
+
+// V3 drag-seeded — render V3 with revealed=true and drag={x:120,y:0} so the
+// card shows the "Easy armed" mid-swipe state.
+function ReviewV3DragSeed() {
+  return <ReviewV3Static />;
+}
+
+// Static re-render of V3 showing the armed-Easy mid-drag state. We mimic
+// V3's render directly with seeded values rather than try to drive its
+// pointer-event state from outside.
+function ReviewV3Static() {
+  const card = DECK[0];
+  const c = E;
+  const drag = { x: 120, y: 0 };
+  const armed = 'easy';
+  return (
+    <div style={{
+      width: '100%', height: '100%', background: c.bg, color: c.ink,
+      fontFamily: '"Inter", system-ui', display: 'flex', flexDirection: 'column',
+      position: 'relative', overflow: 'hidden',
+    }}>
+      <div style={{ height: 54, flexShrink: 0 }} />
+      <div style={{ display: 'flex', alignItems: 'center', padding: '8px 16px 0', flexShrink: 0 }}>
+        <div style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg width="10" height="14" viewBox="0 0 10 14" fill="none"><path d="M8 1L2 7l6 6" stroke={c.ink2} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </div>
+        <div style={{ flex: 1, textAlign: 'center' }}>
+          <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 13, color: c.ink2, fontVariantNumeric: 'tabular-nums', letterSpacing: 0.4 }}>
+            {QUEUE.done}<span style={{ color: c.ink3 }}>/{QUEUE.total}</span>
+          </div>
+        </div>
+        <div style={{ width: 36, height: 36 }} />
+      </div>
+      <div style={{ padding: '12px 24px 0', flexShrink: 0 }}>
+        <div style={{ height: 2, borderRadius: 1, background: c.hair, overflow: 'hidden' }}>
+          <div style={{ width: `${(QUEUE.done / QUEUE.total) * 100}%`, height: '100%', background: c.amber }} />
+        </div>
+      </div>
+      <div style={{ padding: '18px 20px 8px', display: 'flex', flexDirection: 'column', minHeight: 0, position: 'relative', height: 350, flexShrink: 0 }}>
+        <div style={{ position: 'absolute', left: -2, top: '50%', writingMode: 'vertical-rl', transform: 'translateY(-50%) rotate(180deg)', fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, letterSpacing: 1.4, textTransform: 'uppercase', color: c.ink3, opacity: 0.6, padding: '6px 2px' }}>Again</div>
+        <div style={{ position: 'absolute', right: -2, top: '50%', writingMode: 'vertical-rl', transform: 'translateY(-50%)', fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, letterSpacing: 1.4, textTransform: 'uppercase', color: c.easy, opacity: 1, padding: '6px 2px' }}>Easy</div>
+        <div style={{ position: 'absolute', top: -2, left: '50%', transform: 'translateX(-50%)', fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, letterSpacing: 1.4, textTransform: 'uppercase', color: c.ink3, opacity: 0.6, padding: '2px 6px' }}>Good</div>
+        <div style={{ position: 'absolute', bottom: -2, left: '50%', transform: 'translateX(-50%)', fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, letterSpacing: 1.4, textTransform: 'uppercase', color: c.ink3, opacity: 0.6, padding: '2px 6px' }}>Hard</div>
+
+        <div style={{
+          flex: 1, background: c.bgLift, border: `1px solid ${c.easy}66`,
+          borderRadius: 14, padding: '24px 22px',
+          display: 'flex', flexDirection: 'column',
+          transform: `translate(${drag.x * 0.5}px, ${drag.y * 0.5}px) rotate(${drag.x * 0.03}deg)`,
+          touchAction: 'none', userSelect: 'none',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: '"IBM Plex Mono", monospace', fontSize: 10.5, letterSpacing: 1.2, color: c.ink3, textTransform: 'uppercase', marginBottom: 14 }}>
+            <span>Basic</span><span>{card.deck}</span>
+          </div>
+          <div style={{ fontFamily: '"Fraunces", serif', fontSize: 23, lineHeight: 1.38, color: c.ink, letterSpacing: -0.2, textWrap: 'pretty' }}>{card.front}</div>
+          <div style={{ height: 1, background: c.hair, margin: '18px -4px 16px' }} />
+          <div style={{ fontFamily: '"Fraunces", serif', fontSize: 16, lineHeight: 1.5, color: c.ink2, textWrap: 'pretty' }}>{card.back}</div>
+        </div>
+      </div>
+      <div style={{ flex: 1, padding: '8px 16px 28px', flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+        <div style={{ textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, letterSpacing: 1.4, color: c.ink3, marginBottom: 10, textTransform: 'uppercase' }}>swipe or tap</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {[
+            { k: 'again', label: 'Again', color: c.again, bg: c.againBg, hint: '←' },
+            { k: 'hard',  label: 'Hard',  color: c.hard,  bg: c.hardBg,  hint: '↓' },
+            { k: 'good',  label: 'Good',  color: c.good,  bg: c.goodBg,  hint: '↑' },
+            { k: 'easy',  label: 'Easy',  color: c.easy,  bg: c.easyBg,  hint: '→' },
+          ].map((b) => {
+            const isArmed = armed === b.k;
+            return (
+              <div key={b.k} style={{
+                height: 70, background: isArmed ? b.color + '24' : b.bg,
+                border: `1px solid ${isArmed ? b.color : b.color + '33'}`,
+                borderRadius: 12, color: b.color,
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 18px',
+              }}>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 0.2, textTransform: 'uppercase', opacity: 0.85 }}>{b.label}</div>
+                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 10, opacity: 0.55, letterSpacing: 1, marginTop: 1 }}>{b.hint} swipe</div>
+                </div>
+                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 22, fontWeight: 500, letterSpacing: -0.5 }}>{card.intervals[b.k]}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
